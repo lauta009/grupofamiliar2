@@ -14,14 +14,23 @@ class AlumnoController extends Controller
      */
     public function index(Request $request)
     {
-       
-        if($request->paginate){
-            
-            $alumnos = Alumno::where('dni', 'LIKE', '%'.$request->search.'%')->orderBy('apellido', 'ASC')->paginate(50);
+        if (is_numeric($request->search)) {
+            if($request->paginate){
+                
+                $alumnos = Alumno::where('dni', 'LIKE', '%'.$request->search.'%')->orderBy('domicilio', 'ASC')->paginate($request->registros);
+            }else{
+                $alumnos = Alumno::where('dni', 'LIKE', '%'.$request->search.'%')->orderBy('domicilio', 'ASC')->get();
+            }
+            return response()->json($alumnos);
         }else{
-            $alumnos = Alumno::where('dni', 'LIKE', '%'.$request->search.'%')->orderBy('apellido', 'ASC')->get();
+            if($request->paginate){
+                
+                $alumnos = Alumno::where('apellido', 'LIKE', '%'.$request->search.'%')->orWhere('nombre', 'LIKE', '%'.$request->search.'%')->orderBy('apellido', 'ASC')->paginate($request->registros);
+            }else{
+                $alumnos = Alumno::where('apellido', 'LIKE', '%'.$request->search.'%')->orWhere('nombre', 'LIKE', '%'.$request->search.'%')->orderBy('apellido', 'ASC')->get();
+            }
+            return response()->json($alumnos);
         }
-        return response()->json($alumnos);
     }
 
     /**
