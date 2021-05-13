@@ -14,6 +14,9 @@ class AlumnoController extends Controller
      */
     public function index(Request $request)
     {
+        $alumnos = Alumno::all();
+        return response()->json($alumnos);
+
         if (is_numeric($request->search)) {
             if($request->paginate){
                 
