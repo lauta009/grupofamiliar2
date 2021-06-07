@@ -14,10 +14,7 @@ class AlumnoController extends Controller
      */
     public function index(Request $request)
     {
-        $alumnos = Alumno::all();
-        return response()->json($alumnos);
-
-        if (is_numeric($request->search)) {
+                if (is_numeric($request->search)) {
             if($request->paginate){
                 
                 $alumnos = Alumno::where('dni', 'LIKE', '%'.$request->search.'%')->orderBy('domicilio', 'ASC')->paginate($request->registros);
