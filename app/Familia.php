@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Familia extends Model
 {
-    function Alumnos(){
-        return $this->belongsToMany(Alumno::class);
+    function alumnos(){
+        return $this->belongsToMany(Alumno::class, 'alumno_familias','familia_id','alumno_id');
     }
 }

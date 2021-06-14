@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Alumno_familia;
 use App\Familia;
+use App\Alumno;
 use Illuminate\Http\Request;
 
 class FamiliaController extends Controller
@@ -12,9 +13,20 @@ class FamiliaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if($request->paginate){
+            $familias = Familia::with('alumnos')->where('apellido', 'LIKE', '%'.$request->search.'%')->orderBy('apellido', 'ASC')->paginate(50);
+        }else{
+            $familias = Familia::with('alumnos')->where('apellido','LIKE', '%'.$request->search.'%')->orderBy('apellido', 'ASC')->get();
+        }
+        foreach($familias as $familia){
+            $familia->alumnos();
+        }
+        return response()->json($familias);
+        
+
+
     }
 
     /**
@@ -25,7 +37,19 @@ class FamiliaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $familia = New Familia;
+        $familia->apellido = $request->nombre;
+        $familia->domicilio = $request->domicilio;
+        $integrantes = $request->integrantes;
+        if($familia->save()){
+            foreach ($integrantes as $integrante) {
+                
+                $familia->alumnos()->attach($integrante["id"]);   
+            }
+        return response()->json(['success' => true, 'familia' => $familia]);
+        }
+        
     }
 
     /**
