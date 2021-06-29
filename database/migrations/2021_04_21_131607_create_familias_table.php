@@ -15,6 +15,7 @@ class CreateFamiliasTable extends Migration
     {
         Schema::create('familias', function (Blueprint $table) {
             $table->id();
+            $table->string('apellido');
             $table->string("domicilio");
             $table->string("observaciones")->nullable();
             $table->timestamps();
